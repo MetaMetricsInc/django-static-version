@@ -123,6 +123,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-from envs import env
-
-STATIC_VERSION = env('STATIC_VERSION')
+STATIC_VERSION = 1.2

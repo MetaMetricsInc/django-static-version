@@ -1,4 +1,4 @@
-{% load add_version %}
+{% load staticfiles add_version %}
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
     "http://www.w3.org/TR/html4/strict.dtd">
@@ -10,6 +10,11 @@
   <body>
     {{ "http://fake.com/"|version:static_version }}<br>
     <br>
-    {{ "http://fake.com/?frontier=final"|version:static_version }}
+    {{ "http://fake.com/?frontier=final"|version:static_version }}<br>
+    <br>
+    {% static 'bogus.jpg' as bogus_url %}
+    {{ bogus_url|version:static_version }}<br>
+    <br>
+    {% static_version 'bogus.jpg' %}
 </body>
 </html>
