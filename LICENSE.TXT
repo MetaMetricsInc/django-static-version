@@ -1,4 +1,4 @@
-Copyright (c) 2016, MetaMetrics Inc
+Copyright (c) 2017, MetaMetrics Inc
 
 All rights reserved.
 
