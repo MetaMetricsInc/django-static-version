@@ -10,7 +10,7 @@
   <body>
     {{ "http://fake.com/"|version:static_version }}<br>
     <br>
-    {{ "http://fake.com/?frontier=final"|version:static_version }}<br>
+    {{ "http://fake.com/this/is/not/real/?frontier=final"|version:static_version }}<br>
     <br>
     {% static 'bogus.jpg' as bogus_url %}
     {{ bogus_url|version:static_version }}<br>

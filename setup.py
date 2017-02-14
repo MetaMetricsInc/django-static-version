@@ -12,7 +12,7 @@ setup(
     long_description=README,
     author='Peter Konrad Konneker',
     author_email='pkonneker@lexile.com',
-    url='https://github.com/yourname/django-myapp/',
+    url='https://github.com/MetaMetricsInc/django-static-version',
     data_files = [("", ["LICENSE.txt"])],
     install_requires=[
         'Django>=1.9,<1.10',
