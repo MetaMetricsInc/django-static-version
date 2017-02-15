@@ -32,10 +32,10 @@ register = template.Library()
 @stringfilter
 def version(url, version):
     url_parts = urlparse.urlparse(url)
-    query = urlparse.parse_qs(url_parts.query)
-    query['v'] = version
+    query = urlparse.parse_qsl(url_parts.query)
+    query.append(('v', version))
 
-    return urlparse.urlunparse(url_parts[:4] + (urlencode(query, True),) + url_parts[5:])
+    return urlparse.urlunparse(url_parts[:4] + (urlencode(query),) + url_parts[5:])
 
 @register.simple_tag(takes_context=True)
 def static_version(context, url):
