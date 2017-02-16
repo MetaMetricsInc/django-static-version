@@ -68,6 +68,15 @@ class TestPackage(unittest.TestCase):
         tagged_url = version(test_url, settings.STATIC_VERSION)
 
         self.assertEqual(test_url + "&v={}".format(settings.STATIC_VERSION), tagged_url)
+        self.assertEqual(test_url + "&v={}".format(settings.STATIC_VERSION), tagged_url)
+
+    def test_templatetag_add_query_with_fragment(self):
+        test_url = "http://fake.com/"
+        fragment= "#fragment"
+
+        tagged_url = version(test_url + fragment, settings.STATIC_VERSION)
+
+        self.assertEqual(test_url + "?v={}".format(settings.STATIC_VERSION) + fragment, tagged_url)
 
     def test_template_tag(self):
         test_url = "relative.jpg"
