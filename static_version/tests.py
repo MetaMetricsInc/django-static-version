@@ -53,7 +53,6 @@ class TestPackage(unittest.TestCase):
 
         tagged_url = version(test_url, settings.STATIC_VERSION)
 
-        # Make sure the url is just the old url plus the version query
         self.assertIn(test_url + "?v={}".format(settings.STATIC_VERSION), tagged_url)
 
     def test_templatetag_add(self):
@@ -61,9 +60,14 @@ class TestPackage(unittest.TestCase):
 
         tagged_url = version(test_url, settings.STATIC_VERSION)
 
-        # Make sure the new url has both query components
-        self.assertIn("v={}".format(settings.STATIC_VERSION), tagged_url)
-        self.assertIn("frontier=final", tagged_url)
+        self.assertEqual(test_url + "&v={}".format(settings.STATIC_VERSION), tagged_url)
+
+    def test_templatetag_add_big_query(self):
+        test_url = "http://fake.com/?this=that&here=there&tomayto=tomahto&foo=bar&location=nowhere"
+
+        tagged_url = version(test_url, settings.STATIC_VERSION)
+
+        self.assertEqual(test_url + "&v={}".format(settings.STATIC_VERSION), tagged_url)
 
     def test_template_tag(self):
         test_url = "relative.jpg"
@@ -71,7 +75,7 @@ class TestPackage(unittest.TestCase):
 
         tagged_url = static_version(test_context, test_url)
 
-        # Make sure the new url has both query components
+        # Make sure the new url has the query component, the relative url, and the static portion
         self.assertIn("v={}".format(test_context['static_version']), tagged_url)
         self.assertIn(settings.STATIC_URL, tagged_url)
         self.assertIn(test_url, tagged_url)
