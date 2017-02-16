@@ -2,7 +2,7 @@
 
 This is a simple django utility that adds a version number to static files with
 a custom templatetag and context_processor. The version number is pulled from
-the django settings. The  motivating use case was cache busting in S3, we will
+the django settings. The  motivating use case was cache busting in CloudFront, we will
 simple bump up the version number on redeploy to invalidate static files.
 
 
