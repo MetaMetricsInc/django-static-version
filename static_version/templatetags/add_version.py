@@ -20,22 +20,27 @@
     "Portions Copyright [year] [name of copyright owner]"
 """
 
-import urlparse
 from django import template
-from urllib import urlencode
 from django.templatetags.static import static
 from django.template.defaultfilters import stringfilter
+
+try:
+    from urlparse import (urlparse, parse_qsl, urlunparse)
+    from urllib import urlencode
+except ImportError:
+    # Python3
+    from urllib.parse import (urlparse, parse_qsl, urlunparse, urlencode)
 
 register = template.Library()
 
 @register.filter
 @stringfilter
 def version(url, version):
-    url_parts = urlparse.urlparse(url)
-    query = urlparse.parse_qsl(url_parts.query)
+    url_parts = urlparse(url)
+    query = parse_qsl(url_parts.query)
     query.append(('v', version))
 
-    return urlparse.urlunparse(url_parts[:4] + (urlencode(query),) + url_parts[5:])
+    return urlunparse(url_parts[:4] + (urlencode(query),) + url_parts[5:])
 
 @register.simple_tag(takes_context=True)
 def static_version(context, url):
