@@ -1,12 +1,10 @@
 import os
 from setuptools import setup
 
-here = os.path.abspath(os.path.dirname(__file__))
-
 setup(
     name='django-static-version',
     version='0.1',
-    packages=['static_version', 'static_version.templatetags'],
+    packages=['static_version', 'static_version.templatetags', 'static_version.management', 'static_version.management.commands', 'static_version.util'],
     description='Small lib to add a version numbers to urls',
     author='Peter Konrad Konneker',
     author_email='pkonneker@lexile.com',

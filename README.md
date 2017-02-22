@@ -6,7 +6,7 @@ the django settings. The  motivating use case was cache busting in CloudFront, w
 simple bump up the version number on redeploy to invalidate static files.
 
 
-# How to use
+## How to use
 
 * Install this package.
 ```bash
@@ -48,7 +48,15 @@ Alternately we can use the custom template tag `static_version`.
 ```
 The above code will pull the version from the context and append it to the url returned by the built-in `static` tag and append the version number as above. This will result in `/static/bogus.jpg?v=1.2 ` if your static root is `/static/`.
 
-# Tests
+## Custom management
+A custom management command has been provided to hash a local copy of the collected static files and compare it to the hash stored in the VERSION file. If the version needs  a bump, it will store a bumped version number and the new hash back into the VERSION file.
+
+### Version File
+Consists of two parts on the first two lines of the file
+1. Version number, currently just an integer
+2. md5 hash of the static directory
+
+## Tests
 To run tests you simple run django-admin with the test_settings file
 ```bash
 django-admin.py test --settings=test_settings
