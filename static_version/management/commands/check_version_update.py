@@ -4,22 +4,14 @@ from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 
 class Command(BaseCommand):
-    help = 'Check if the static files have changed'
+    help = 'Check if the static files have changed, if neccessary bumps the integer version number and writes out the  new hash value.'
 
     def handle(self, *args, **options):
-        # open up the stored version info
-            # check for a hash value
-            # hash the current directory
-            #   have them run the collectstatic manually?
-            #   grab the static dir and hash that
-            # compare hashes and update version if neccessary
-            # write out new version and hash
         old_version = 0
         old_hash = ""
 
         try:
             with open('STATIC.VERSION', 'r') as version_file:
-                # We're only really interested in the first two lines of this file
                 old_version = int(next(version_file).strip())
                 old_hash = next(version_file).strip()
         except IOError:
