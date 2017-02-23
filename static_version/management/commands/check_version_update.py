@@ -11,7 +11,7 @@ class Command(BaseCommand):
         old_hash = ""
 
         try:
-            with open('STATIC.VERSION', 'r') as version_file:
+            with open(settings.STATIC_VERSION_FILE, 'r') as version_file:
                 old_version = int(next(version_file).strip())
                 old_hash = next(version_file).strip()
         except IOError:
@@ -28,6 +28,6 @@ class Command(BaseCommand):
             new_version = old_version + 1
 
             print("Detected hash change, writing out the bumped version (v={}) and new hash.".format(new_version))
-            with open('STATIC.VERSION', 'w') as version_file_out:
+            with open(settings.STATIC_VERSION_FILE, 'w') as version_file_out:
                 version_file_out.write("{}\n".format(new_version))
                 version_file_out.write("{}\n".format(new_hash))
