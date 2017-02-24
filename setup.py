@@ -11,6 +11,7 @@ setup(
     url='https://github.com/MetaMetricsInc/django-static-version',
     data_files = [("", ["LICENSE.txt", "README.md"])],
     install_requires=[
+        'checksumdir',
         'Django>=1.8',
     ]
 )
