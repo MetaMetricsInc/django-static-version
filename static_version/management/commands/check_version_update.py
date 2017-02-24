@@ -1,4 +1,25 @@
 
+"""
+    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+    Copyright (c) 2017 MetaMetrics Inc. All rights reserved.
+
+    The contents of this file are subject to the terms of either the BSD
+    or the Common Development and Distribution License("CDDL")
+    (collectively, the "License").  You may not use this file except in
+    compliance with the License.  You can obtain a copy of the License
+    from LICENSE.txt in the root of the source distribution.
+    See the License for the specific language governing permissions
+    and limitations under the License.
+
+    When distributing the software, include this License Header Notice in each
+    file and include the License file LICENSE.txt.
+
+    Modifications:
+    If applicable, add the following below the License Header, with the fields
+    enclosed by brackets [] replaced by your own identifying information:
+    "Portions Copyright [year] [name of copyright owner]"
+"""
 import checksumdir
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
@@ -21,8 +42,12 @@ class Command(BaseCommand):
         except ValueError:
             self.stdout.write("Improperly formatted or missing version number. Assumed 0.")
 
-        new_hash = checksumdir.dirhash(settings.STATIC_ROOT, 'md5')
-        self.stdout.write("Directory '{}' hashed to value: {}".format(settings.STATIC_ROOT, new_hash))
+        try:
+            new_hash = checksumdir.dirhash(settings.STATIC_ROOT, 'md5')
+            self.stdout.write("Directory '{}' hashed to value: {}".format(settings.STATIC_ROOT, new_hash))
+        except TypeError:
+            self.stderr.write("Error: cannot compute the md5 checksum of the static directory.")
+            raise
 
         if old_hash != new_hash:
             new_version = old_version + 1

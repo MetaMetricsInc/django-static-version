@@ -26,7 +26,6 @@ from django.utils.six import StringIO
 from static_version.util import parse_version
 from django.core.management import call_command
 from static_version.context_processors import static_urls
-from static_version.management.commands import check_version_update
 from static_version.templatetags.add_version import version, static_version
 
 class TestManagementCommand(TestCase):
@@ -39,6 +38,7 @@ class TestManagementCommand(TestCase):
 
                 out = StringIO()
                 call_command("check_version_update", stdout=out)
+
                 self.assertNotIn("Detected hash change", out.getvalue())
 
     @patch("checksumdir.dirhash")
@@ -49,6 +49,7 @@ class TestManagementCommand(TestCase):
 
                 out = StringIO()
                 call_command("check_version_update", stdout=out)
+
                 self.assertIn("Detected hash change", out.getvalue())
 
     @patch("checksumdir.dirhash")
@@ -59,6 +60,7 @@ class TestManagementCommand(TestCase):
 
                 out = StringIO()
                 call_command("check_version_update", stdout=out)
+
                 self.assertIn("Hash missing", out.getvalue())
 
 
@@ -70,21 +72,46 @@ class TestManagementCommand(TestCase):
 
                 out = StringIO()
                 call_command("check_version_update", stdout=out)
+
                 self.assertIn("Improperly formatted or missing version number", out.getvalue())
 
-    # Note: throws type error
     @patch("checksumdir.dirhash")
     def test_missing_dir(self, mocked_dirhash):
         mocked_dirhash.side_effect = TypeError()
         with patch("__builtin__.open", mock_open(read_data="notanumber\nnotreallyahash\n")) as mocked_open:
             with self.settings(STATIC_VERSION_FILE='STATIC.VERSION'):
+                # If the directory is missing. A TypeError will be raised.
                 with self.assertRaises(TypeError):
                     out = StringIO()
-                    call_command("check_version_update", stdout=out)
+                    call_command("check_version_update", stdout=out, stderr=out)
 
 
 class TestUtils(TestCase):
-    pass
+    def test_util(self):
+        with patch("static_version.util.open", mock_open(read_data="1\nnotreallyahash\n")) as mocked_open:
+            with self.settings(STATIC_VERSION_FILE='STATIC.VERSION'):
+                v = parse_version()
+
+                self.assertEqual(1, v)
+
+    def test_missing_setting(self):
+        with patch("static_version.util.open", mock_open(read_data="1\nnotreallyahash\n")) as mocked_open:
+            with self.assertRaises(AttributeError):
+                v = parse_version()
+
+    def test_bad_version_format(self):
+        with patch("static_version.util.open", mock_open(read_data="notanumber\nnotreallyahash\n")) as mocked_open:
+            with self.settings(STATIC_VERSION_FILE='STATIC.VERSION'):
+                with self.assertRaises(ValueError):
+                    v = parse_version()
+
+
+    def test_missing_file(self):
+        with patch("static_version.util.open", mock_open()) as mocked_open:
+            mocked_open.side_effect =  IOError()
+            with self.settings(STATIC_VERSION_FILE='STATIC.VERSION'):
+                with self.assertRaises(IOError):
+                    v = parse_version()
 
 class TestContextProcessor(TestCase):
     def test_context_processor(self):
