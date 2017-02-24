@@ -16,6 +16,12 @@ pip install django-static-version
 ```python
 STATIC_VERSION="1.0.1"
 ```
+* The setting can also be pulled from a version file. In this case you will also need the STATIC_VERSION_FILE setting. See below for the format of this file.
+```python
+from static_version.util import parse_version
+STATIC_VERSION_FILE="STATIC.VERSION"
+STATIC_VERSION=parse_version()
+```
 * Add the context processor in settings. This adds the setting above to the request context.
 ```python
 TEMPLATES = [
@@ -48,13 +54,25 @@ Alternately we can use the custom template tag `static_version`.
 ```
 The above code will pull the version from the context and append it to the url returned by the built-in `static` tag and append the version number as above. This will result in `/static/bogus.jpg?v=1.2 ` if your static root is `/static/`.
 
-## Custom management
-A custom management command has been provided to hash a local copy of the collected static files and compare it to the hash stored in the VERSION file. If the version needs  a bump, it will store a bumped version number and the new hash back into the VERSION file.
+## Version Management
+
+### Management Command
+A custom management command has been provided to hash a local copy of the collected static files and compare it to the hash stored in the version file. If the version needs  a bump, it will store a bumped version number and the new hash back into the version file. Make sure you call collectstatic first if neccessary.
+```bash
+python manage.py collectstatic  # need to have static files to hash
+python manage.py check_version_update
+```
 
 ### Version File
 Consists of two parts on the first two lines of the file
 1. Version number, currently just an integer
 2. md5 hash of the static directory
+
+Example:
+```
+7
+0bba161a7165a211c7435c950ee78438
+```
 
 ## Tests
 To run tests you simple run django-admin with the test_settings file
